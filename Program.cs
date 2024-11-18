@@ -1,3 +1,11 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using Pra_C3_Native;
+using System;
 
-Console.WriteLine("Hello, World!");
+class Program
+{
+    public static void Main()
+    {
+        Pra_C3_Native_app Native_app = new Pra_C3_Native_app();
+        Native_app.Run();
+    }
+}
