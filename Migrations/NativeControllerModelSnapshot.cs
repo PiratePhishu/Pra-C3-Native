@@ -10,7 +10,7 @@ using Pra_C3_Native.Data;
 
 namespace Pra_C3_Native.Migrations
 {
-    [DbContext(typeof(NativeController))]
+    [DbContext(typeof(NativeContext))]
     partial class NativeControllerModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -53,6 +53,9 @@ namespace Pra_C3_Native.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Admin")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("Credits")
                         .HasColumnType("int");

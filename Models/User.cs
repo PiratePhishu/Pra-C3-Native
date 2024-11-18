@@ -14,6 +14,11 @@ namespace Pra_C3_Native.Models
         public string Password { get; set; }
         public int Credits { get; set; }
 
-        public User() { }
+        public bool Admin {  get; set; }
+
+        public User() 
+        {
+            Admin = false;
+        }
     }
 }

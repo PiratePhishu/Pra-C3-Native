@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pra_C3_Native.Data
 {
-    internal class NativeController : DbContext
+    internal class NativeContext : DbContext
     {
         public DbSet<User> users {  get; set; }
         public DbSet<Match> matches { get; set; }

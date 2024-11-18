@@ -12,8 +12,8 @@ using Pra_C3_Native.Data;
 namespace Pra_C3_Native.Migrations
 {
     [DbContext(typeof(NativeContext))]
-    [Migration("20241118090546_add-models")]
-    partial class addmodels
+    [Migration("20241118091031_Admin_toggle")]
+    partial class Admin_toggle
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,6 +56,9 @@ namespace Pra_C3_Native.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Admin")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("Credits")
                         .HasColumnType("int");

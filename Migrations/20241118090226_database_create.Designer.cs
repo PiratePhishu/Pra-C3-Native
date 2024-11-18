@@ -10,7 +10,7 @@ using Pra_C3_Native.Data;
 
 namespace Pra_C3_Native.Migrations
 {
-    [DbContext(typeof(NativeController))]
+    [DbContext(typeof(NativeContext))]
     [Migration("20241118090226_database_create")]
     partial class database_create
     {
