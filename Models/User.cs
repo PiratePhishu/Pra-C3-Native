@@ -19,6 +19,7 @@ namespace Pra_C3_Native.Models
         public User() 
         {
             Admin = false;
+            Credits = 50;
         }
     }
 }
