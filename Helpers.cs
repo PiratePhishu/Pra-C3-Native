@@ -1,7 +1,9 @@
-﻿using Pra_C3_Native.Data;
+﻿using BCrypt.Net;
+using Pra_C3_Native.Data;
 using Pra_C3_Native.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,8 +37,8 @@ namespace CarDB_app
 
             return retVal;
         }
-        
 
+        
         internal static void Pause()
         {
             Console.WriteLine("Press <ENTER> to continue...");

@@ -10,8 +10,8 @@ namespace Pra_C3_Native.Data
 {
     internal class NativeContext : DbContext
     {
-        public DbSet<User> users {  get; set; }
-        public DbSet<Match> matches { get; set; }
+        public DbSet<User> Users {  get; set; }
+        public DbSet<Match> Matches { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseMySql(
