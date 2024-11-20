@@ -21,5 +21,11 @@ namespace Pra_C3_Native.Models
             Admin = false;
             Credits = 50;
         }
+
+        public void PasswordHash(string password)
+        {
+            Password = BCrypt.Net.BCrypt.EnhancedHashPassword(password);
+        }
+
     }
 }
