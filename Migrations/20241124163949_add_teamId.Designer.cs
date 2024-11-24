@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pra_C3_Native.Data;
 
@@ -10,9 +11,11 @@ using Pra_C3_Native.Data;
 namespace Pra_C3_Native.Migrations
 {
     [DbContext(typeof(NativeContext))]
-    partial class NativeControllerModelSnapshot : ModelSnapshot
+    [Migration("20241124163949_add_teamId")]
+    partial class add_teamId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

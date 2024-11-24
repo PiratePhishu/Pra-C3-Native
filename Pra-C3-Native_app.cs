@@ -1,4 +1,6 @@
 ﻿using BCrypt.Net;
+using CarDB_app;
+using Microsoft.EntityFrameworkCore.Storage;
 using Pra_C3_Native.Data;
 using Pra_C3_Native.Models;
 using System;
@@ -7,16 +9,19 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Pra_C3_Native.Data.ApiReader;
 
 namespace Pra_C3_Native
 {
     internal class Pra_C3_Native_app
     {
+        public ApiReader reader;
         NativeContext Datacontext;
         User? session = null;
 
         public Pra_C3_Native_app()
         {
+            reader = new ApiReader();
             Datacontext = new NativeContext();
         }
         public void Run()
@@ -33,7 +38,7 @@ namespace Pra_C3_Native
 
         public void HandleInput(string userInput)
         {
-            if (session != null)
+            if (session != null && session.Admin == false)
             {
                 switch (userInput)
                 {
@@ -49,7 +54,8 @@ namespace Pra_C3_Native
                         break;
                 }
             }
-            else
+            
+            else if (session == null) 
             {
                 switch (userInput)
                 {
@@ -58,6 +64,26 @@ namespace Pra_C3_Native
                         break;
                     case "2":
                         logIn();
+                        break;
+                    default:
+                        Console.WriteLine("kies een geldige keuze");
+                        break;
+                }
+            }
+
+            else if (session.Admin == true)
+            {
+                switch (userInput)
+                {
+                    case "1":
+                        break;
+                    case "2":
+                        break;
+                    case "3":
+                        GetAllMatches();
+                        break;
+                    case "4":
+                        session = null;
                         break;
                     default:
                         Console.WriteLine("kies een geldige keuze");
@@ -78,6 +104,43 @@ namespace Pra_C3_Native
             }
         }
 
+        public void ClearMatches()
+        {
+            List<Match> matches = Datacontext.Matches.ToList();
+            foreach (Match match in matches)
+            {
+                Datacontext.Remove(match);
+            }
+        }
+
+        public void GetAllMatches()
+        {
+            ClearMatches();
+            Console.Clear();
+            List<Match> matches = new List<Match>();
+            for (int i = 1; i > 0; i++)
+            {
+                MatchApi match = reader.GetMatch(i.ToString());
+                if (match.team1_id == 0)
+                {
+                    break;
+                }
+                else
+                {
+                    
+                    Match newMacht = new Match(match.team1_id, match.team2_id, match.team1_name, match.team2_name);
+                    matches.Add(newMacht);
+                }
+            }
+            foreach (Match match in matches) 
+            {
+                Console.WriteLine($"{match.Team1_id}:{match.Team1} vs {match.Team2_id}:{match.Team2}\n");
+                Datacontext.Add(match);
+            }
+            Datacontext.SaveChanges();  
+            Helpers.Pause();
+        }
+
         public void RegisterAccount()
         {
             bool found = false;
@@ -88,7 +151,7 @@ namespace Pra_C3_Native
                 User user = new User();
                 Console.WriteLine("enter Username:");
                 user.Name = Console.ReadLine();
-                List<User> users = Datacontext.users.ToList();
+                List<User> users = Datacontext.Users.ToList();
                 foreach (User userName in users)
                 {
                     if(userName.Name == user.Name)
@@ -128,7 +191,7 @@ namespace Pra_C3_Native
         public void logIn()
         {
             string userinput;
-            List<User> userList = Datacontext.users.ToList();
+            List<User> userList = Datacontext.Users.ToList();
 
             Console.Clear();
             Console.WriteLine("please enter your username:");
@@ -164,8 +227,16 @@ namespace Pra_C3_Native
                 Console.WriteLine(session.Name);
                 Console.WriteLine(session.Credits);
                 Console.WriteLine("1. show all matches");
-                Console.WriteLine("2. show user account");
-                Console.WriteLine("3. log out");
+                Console.WriteLine("2. show user account \n");
+                if (session.Admin == true)
+                {
+                    Console.WriteLine("3. haal wedstrijden op");
+                    Console.WriteLine("4. log out");
+                }
+                else
+                {
+                    Console.WriteLine("3. log out");
+                }
             }
             else
             {
