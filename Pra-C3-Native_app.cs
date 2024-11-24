@@ -21,6 +21,7 @@ namespace Pra_C3_Native
         }
         public void Run()
         {
+            AdminAdd();
             string userInput = "";
 
             while (userInput.ToLower() != "x")
@@ -62,6 +63,18 @@ namespace Pra_C3_Native
                         Console.WriteLine("kies een geldige keuze");
                         break;
                 }
+            }
+        }
+        
+        public void AdminAdd()
+        {
+            if (Datacontext.Users.Count() == 0) // check if there are any users if not make a new admin account
+            {
+                Console.WriteLine("no users found, creating admin account");
+                string password = "admin";
+                string passwordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(password);
+                Datacontext.Add(new User() { Name = "admin", Email = "admin@admin.com", Password = passwordHash, Admin = true });
+                Datacontext.SaveChanges();
             }
         }
 
