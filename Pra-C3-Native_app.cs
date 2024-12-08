@@ -115,29 +115,44 @@ namespace Pra_C3_Native
 
         public void GetAllMatches()
         {
-            ClearMatches();
             Console.Clear();
-            List<Match> matches = new List<Match>();
-            for (int i = 1; i > 0; i++)
+            List<Match> db_Matches = Datacontext.Matches.ToList(); 
+            List<MatchApi> matches = reader.GetMatch();
+            Console.WriteLine("Matches added:");
+            foreach (MatchApi match in matches)
             {
-                MatchApi match = reader.GetMatch(i.ToString());
-                if (match.team1_id == 0)
+                bool found = false;
+                foreach (Match db_match in db_Matches)
                 {
-                    break;
+                    if (db_match.Match_id == match.id)
+                    {
+                        found = true;
+                        break;
+                    }
                 }
-                else
+
+                if (found == false)
                 {
-                    
-                    Match newMacht = new Match(match.team1_id, match.team2_id, match.team1_name, match.team2_name);
-                    matches.Add(newMacht);
+                    Console.WriteLine($"Match ID: {match.id}, {match.team1.name} vs {match.team2.name}");
+                    Match newMatch = new Match(match.id, match.team1_id, match.team2_id, match.team1.name, match.team2.name);
+                    if(match.team1_score != null && match.team2_score != null)
+                    {
+                        newMatch.Team1_Score = match.team1_score;
+                        newMatch.Team2_Score = match.team2_id;
+                        if (match.team1_score > match.team2_score)
+                        {
+                            newMatch.Winner = match.team1.name;
+                        }
+                        else if (match.team1_score < match.team2_score)
+                        {
+                            newMatch.Winner = match.team2.name;
+                        }
+                        else newMatch.Winner = "none";
+                    }
+                    Datacontext.Add(newMatch);
+                    Datacontext.SaveChanges();
                 }
             }
-            foreach (Match match in matches) 
-            {
-                Console.WriteLine($"{match.Team1_id}:{match.Team1} vs {match.Team2_id}:{match.Team2}\n");
-                Datacontext.Add(match);
-            }
-            Datacontext.SaveChanges();  
             Helpers.Pause();
         }
 
@@ -224,8 +239,8 @@ namespace Pra_C3_Native
             Console.Clear();
             if (session != null)
             {
-                Console.WriteLine(session.Name);
-                Console.WriteLine(session.Credits);
+                Console.WriteLine($"user: {session.Name}");
+                Console.WriteLine($"Credits: {session.Credits}");
                 Console.WriteLine("1. show all matches");
                 Console.WriteLine("2. show user account \n");
                 if (session.Admin == true)

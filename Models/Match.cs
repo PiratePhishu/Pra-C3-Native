@@ -9,15 +9,22 @@ namespace Pra_C3_Native.Models
 {
     internal class Match
     {
+        public int Match_id { get; set; }
         public int id {  get; set; }
         public string Team1 {  get; set; }
         public string Team2 { get; set; }
 
         public int Team1_id { get; set; }
         public int Team2_id { get; set; }
+        public int? Team1_Score { get; set; }
+        public int? Team2_Score {  get; set; }
 
-        public Match(int team1_id, int team2_id, string team1, string team2) 
+        public string? Winner { get; set; }
+
+
+        public Match(int match_id, int team1_id, int team2_id, string team1, string team2) 
         { 
+            Match_id = match_id;
             Team1 = team1;
             Team2 = team2;
             Team1_id = team1_id;

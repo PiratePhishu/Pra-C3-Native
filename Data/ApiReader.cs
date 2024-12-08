@@ -12,50 +12,50 @@ namespace Pra_C3_Native.Data
     internal class ApiReader
     {
         private readonly HttpClient httpClient;
-        private const string ApiBaseUrl = "http://c3-pra.test/MatchesApi/";
+        private const string ApiBaseUrl = "http://c3-pra.test/MatchesApi";
 
         public ApiReader()
         {
             httpClient = new HttpClient();
         }
 
-        public MatchApi GetMatch(string Id)
+        public List<MatchApi> GetMatch()
         {
-            if (string.IsNullOrEmpty(Id) || !int.TryParse(Id, out var match) || int.Parse(Id) <= 0)
-            {
-                return new MatchApi();
-            }
             try
             {
-                string url = $"{ApiBaseUrl}{Id}";
-                var response = httpClient.GetStringAsync(url).Result;
-
-                var responseContent = JsonSerializer.Deserialize<MatchApi>(response);
-
-                return new MatchApi()
+                var response = httpClient.GetAsync(ApiBaseUrl).Result;
+                if (response.IsSuccessStatusCode)
                 {
-                    team1_id = responseContent.team1_id,
-                    team2_id = responseContent.team2_id,
-                    team1_name = responseContent.team1_name,
-                    team2_name = responseContent.team2_name,
+                    var responseContent = response.Content.ReadAsStringAsync().Result;
+                    var MatchesResponse = JsonSerializer.Deserialize<List<MatchApi>>(responseContent);
+                    return MatchesResponse;
 
-                };
+
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return new MatchApi();
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
+            return new List<MatchApi>();
 
-
-            
         }
 
         public struct MatchApi
         {
+            public int id {  get; set; }
             public int team1_id { get; set; }
             public int team2_id { get; set; }
-            public string team1_name { get; set; }
-            public string team2_name { get; set; }
+            public int? team1_score { get; set; }
+            public int? team2_score { get; set; }
+            public TeamApi team1 { get; set; }
+            public TeamApi team2 { get; set;}
+        }
+
+        public struct TeamApi
+        {
+            public int id { get; set; }
+            public string name { get; set; }
         }
     }
 }
