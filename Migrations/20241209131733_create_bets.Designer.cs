@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pra_C3_Native.Data;
 
@@ -11,9 +12,11 @@ using Pra_C3_Native.Data;
 namespace Pra_C3_Native.Migrations
 {
     [DbContext(typeof(NativeContext))]
-    partial class NativeControllerModelSnapshot : ModelSnapshot
+    [Migration("20241209131733_create_bets")]
+    partial class create_bets
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

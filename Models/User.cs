@@ -15,11 +15,13 @@ namespace Pra_C3_Native.Models
         public int Credits { get; set; }
 
         public bool Admin {  get; set; }
+        public List<Bet> Bets { get; set; }
 
         public User() 
         {
             Admin = false;
             Credits = 50;
+            Bets = new List<Bet>();
         }
 
         public void PasswordHash(string password)

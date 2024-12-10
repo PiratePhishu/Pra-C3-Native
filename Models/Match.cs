@@ -20,6 +20,7 @@ namespace Pra_C3_Native.Models
         public int? Team2_Score {  get; set; }
 
         public string? Winner { get; set; }
+        public List<Bet> Bets { get; set; }
 
 
         public Match(int match_id, int team1_id, int team2_id, string team1, string team2) 
@@ -29,6 +30,7 @@ namespace Pra_C3_Native.Models
             Team2 = team2;
             Team1_id = team1_id;
             Team2_id = team2_id;
+            Bets = new List<Bet>();
         }
 
         public Match() { }  

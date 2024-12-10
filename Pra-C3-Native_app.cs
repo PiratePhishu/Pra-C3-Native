@@ -43,6 +43,7 @@ namespace Pra_C3_Native
                 switch (userInput)
                 {
                     case "1":
+                        ShowAllMatches();
                         break;
                     case "2":
                         break;
@@ -76,6 +77,7 @@ namespace Pra_C3_Native
                 switch (userInput)
                 {
                     case "1":
+                        ShowAllMatches();
                         break;
                     case "2":
                         break;
@@ -111,6 +113,86 @@ namespace Pra_C3_Native
             {
                 Datacontext.Remove(match);
             }
+        }
+
+        public void AddBet(Match match)
+        {
+            Console.Clear();
+            Bet bet = new Bet();
+            int amount;
+            if (match == null)
+            {
+                Console.WriteLine("wedstrijd is niet gevonden");
+                Helpers.Pause();
+                return;
+            }
+            Console.WriteLine($"id: {match.id} | {match.Team1} vs {match.Team2}\n");
+            Console.WriteLine($"1.{match.Team1}\n2.{match.Team2}");
+            Console.Write("vul team nummer in:");
+            string choice = Console.ReadLine();
+            switch (choice)
+            {
+                case "1":
+                    bet.Winner = match.Team1;
+                    break;
+                case "2":
+                    bet.Winner = match.Team2;
+                    break;
+                default:
+                    Console.WriteLine("Team niet gevonden");
+                    Helpers.Pause();
+                    return;
+            }
+
+            amount = Helpers.AskInt("hoeveel wil je inzetten (vul 0 in om te geen bot te zetten)");
+            if (amount == 0)
+            {
+                Console.Clear();
+                Console.WriteLine("bot geännuleert");
+                Helpers.Pause();
+            }
+            else if (amount > session.Credits)
+            {
+                Console.WriteLine("niet genoeg credits");
+                Helpers.Pause();
+            }
+            else
+            {
+                bet.amount = amount;
+                bet.User = session;
+                bet.Match = match;
+                session.Credits -= amount;
+                Datacontext.Add(bet);
+                Datacontext.SaveChanges();
+            }
+        }
+
+        public void ShowAllMatches()
+        {
+            Console.Clear();
+            List<Match> matches = Datacontext.Matches.ToList();
+            foreach (Match match in matches)
+            {
+                if (match.Winner == null)
+                {
+                    Console.WriteLine($"id: {match.id} | {match.Team1} vs {match.Team2}");
+                }
+            }
+            Console.WriteLine("voer wedstrijd id in om een bot te plaatsen | druk op enter om door te gaan");
+            string selectedMatch = Console.ReadLine();
+
+            if (int.TryParse(selectedMatch, out int selected))
+            {
+                Match match = Datacontext.Matches.Find(selected);
+                if (match.Winner == null)
+                {
+                    AddBet(match);
+                }
+                
+            }
+
+
+
         }
 
         public void GetAllMatches()
@@ -247,10 +329,27 @@ namespace Pra_C3_Native
                 {
                     Console.WriteLine("3. haal wedstrijden op");
                     Console.WriteLine("4. log out");
+                    List<Bet> bets = Datacontext.Bets.ToList();
+                    foreach (Bet bet in bets) 
+                    {
+                        if (session == bet.User)
+                        {
+                            Console.WriteLine(bet.amount);
+                        }
+                    }
+
                 }
                 else
                 {
                     Console.WriteLine("3. log out");
+                    List<Bet> bets = Datacontext.Bets.ToList();
+                    foreach (Bet bet in bets)
+                    {
+                        if (session == bet.User)
+                        {
+                            Console.WriteLine(bet.amount);
+                        }
+                    }
                 }
             }
             else

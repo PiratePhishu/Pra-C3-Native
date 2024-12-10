@@ -12,6 +12,7 @@ namespace Pra_C3_Native.Data
     {
         public DbSet<User> Users {  get; set; }
         public DbSet<Match> Matches { get; set; }
+        public DbSet<Bet> Bets { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseMySql(
