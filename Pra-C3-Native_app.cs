@@ -46,6 +46,7 @@ namespace Pra_C3_Native
                         ShowAllMatches();
                         break;
                     case "2":
+                        ShowUsersBets();
                         break;
                     case "3":
                         session = null;
@@ -80,6 +81,7 @@ namespace Pra_C3_Native
                         ShowAllMatches();
                         break;
                     case "2":
+                        ShowUsersBets();
                         break;
                     case "3":
                         GetAllMatches();
@@ -115,6 +117,95 @@ namespace Pra_C3_Native
             }
         }
 
+        public void ShowUsersBets()
+        {
+            List<Bet> bets = Datacontext.Bets.ToList();
+            List<Match> matches = Datacontext.Matches.ToList();
+            int total = 0;
+            int count = 0;
+            Console.Clear();
+            Console.WriteLine($"user: {session.Name}");
+            Console.WriteLine($"Credits: {session.Credits}\n");
+            foreach (Bet bet in bets)
+            {
+                if (bet.User == session)
+                {
+                    count++;
+                }
+            }
+
+            if (count == 0)
+            {
+                Console.WriteLine("er zijn geen weddenschappen gevonden");
+                Helpers.Pause();
+                return;
+            }
+            Console.WriteLine($"--------------------------------------");
+            Console.WriteLine("Geplaatste weddenschappen:\n");
+           
+            foreach(Bet bet in bets)
+            {
+                if (bet.User == session)
+                {
+                    if (!bet.PayedOut)
+                    {
+                        foreach (Match match in matches) 
+                        {
+                            if (bet.Match == match)
+                            {
+                                Console.WriteLine($"   id: {match.id} | {match.Team1} vs {match.Team2}");
+                                Console.WriteLine($"   Team: {bet.Winner} | credits: {bet.amount}\n");
+                            }
+                        }
+                    }
+                }
+            }
+            Console.WriteLine();
+            Console.WriteLine("Verlopen weddenschappen:\n");
+            foreach (Bet bet in bets)
+            {
+                if (bet.User == session)
+                {
+                    if (bet.PayedOut)
+                    {
+                        foreach (Match match in matches)
+                        {
+                            if (bet.Match == match)
+                            {
+                                if (bet.Won == true)
+                                {
+                                    Console.WriteLine("   Gewonnen:");
+                                }
+
+                                else if (bet.Won == false)
+                                {
+                                    Console.WriteLine("   verlooren");
+                                }
+                                Console.WriteLine($"   id: {match.id} | {match.Team1} vs {match.Team2}");
+                                Console.WriteLine($"   Team: {bet.Winner} | credits: {bet.amount}");
+                                if (bet.Won == true)
+                                {
+                                    Console.WriteLine($"   credits gewonnen: {bet.amount}\n");
+                                    total += bet.amount;
+                                }
+
+                                else if (bet.Won == false)
+                                {
+                                    Console.WriteLine($"   credits verloren: {bet.amount}\n");
+                                    total -= bet.amount;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            Console.WriteLine($"--------------------------------------");
+            Console.WriteLine();
+            Console.WriteLine($"totale winst: {total} credits");
+
+            Helpers.Pause();
+        }
+
         public void AddBet(Match match)
         {
             Console.Clear();
@@ -145,7 +236,7 @@ namespace Pra_C3_Native
             }
 
             amount = Helpers.AskInt("hoeveel wil je inzetten (vul 0 in om te geen bot te zetten)");
-            if (amount == 0)
+            if (amount <= 0)
             {
                 Console.Clear();
                 Console.WriteLine("bot geännuleert");
@@ -324,32 +415,16 @@ namespace Pra_C3_Native
                 Console.WriteLine($"user: {session.Name}");
                 Console.WriteLine($"Credits: {session.Credits}");
                 Console.WriteLine("1. show all matches");
-                Console.WriteLine("2. show user account \n");
+                Console.WriteLine("2. weddenschap overzicht\n");
                 if (session.Admin == true)
                 {
                     Console.WriteLine("3. haal wedstrijden op");
                     Console.WriteLine("4. log out");
-                    List<Bet> bets = Datacontext.Bets.ToList();
-                    foreach (Bet bet in bets) 
-                    {
-                        if (session == bet.User)
-                        {
-                            Console.WriteLine(bet.amount);
-                        }
-                    }
 
                 }
                 else
                 {
                     Console.WriteLine("3. log out");
-                    List<Bet> bets = Datacontext.Bets.ToList();
-                    foreach (Bet bet in bets)
-                    {
-                        if (session == bet.User)
-                        {
-                            Console.WriteLine(bet.amount);
-                        }
-                    }
                 }
             }
             else

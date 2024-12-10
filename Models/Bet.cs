@@ -14,10 +14,12 @@ namespace Pra_C3_Native.Models
         public string Winner { get; set; }
         public int amount { get; set; }
         public bool PayedOut { get; set; }
+        public bool? Won {  get; set; }
 
         public Bet() 
         {
             PayedOut = false;
+
         }
     }
 }
