@@ -29,8 +29,6 @@ namespace Pra_C3_Native.Data
                     var responseContent = response.Content.ReadAsStringAsync().Result;
                     var MatchesResponse = JsonSerializer.Deserialize<List<MatchApi>>(responseContent);
                     return MatchesResponse;
-
-
                 }
             }
             catch (Exception ex)

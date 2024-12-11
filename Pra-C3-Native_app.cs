@@ -275,7 +275,7 @@ namespace Pra_C3_Native
             if (int.TryParse(selectedMatch, out int selected))
             {
                 Match match = Datacontext.Matches.Find(selected);
-                if (match.Winner == null)
+                if (match != null && match.Winner == null)
                 {
                     AddBet(match);
                 }
