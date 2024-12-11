@@ -311,7 +311,7 @@ namespace Pra_C3_Native
                     if(match.team1_score != null && match.team2_score != null)
                     {
                         newMatch.Team1_Score = match.team1_score;
-                        newMatch.Team2_Score = match.team2_id;
+                        newMatch.Team2_Score = match.team2_score;
                         if (match.team1_score > match.team2_score)
                         {
                             newMatch.Winner = match.team1.name;
