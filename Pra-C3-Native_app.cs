@@ -364,8 +364,6 @@ namespace Pra_C3_Native
                         bet.PayedOut= false;
                         bet.Won = false;
                     }
-
-                    Datacontext.SaveChanges();
                 }
                 else if(match.Team1_Score < match.Team2_Score)
                 {
@@ -380,9 +378,10 @@ namespace Pra_C3_Native
                         bet.PayedOut = false;
                         bet.Won = false;
                     }
-
-                    Datacontext.SaveChanges();
                 }
+                Datacontext.Bets.Update(bet);
+                Datacontext.Users.Update(user);
+                Datacontext.SaveChanges();
             }
         }
         public void RegisterAccount()
