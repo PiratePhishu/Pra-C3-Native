@@ -19,7 +19,14 @@ namespace Pra_C3_Native.Models
         public Bet() 
         {
             PayedOut = false;
-
+        }
+        public Match GetMatch()
+        {
+            return Match;
+        }
+        public User GetUser()
+        {
+            return User;
         }
     }
 }

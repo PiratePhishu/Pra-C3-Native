@@ -87,6 +87,9 @@ namespace Pra_C3_Native
                         GetAllMatches();
                         break;
                     case "4":
+                        GetAllScores();
+                        break;
+                    case "5": 
                         session = null;
                         break;
                     default:
@@ -275,7 +278,7 @@ namespace Pra_C3_Native
             if (int.TryParse(selectedMatch, out int selected))
             {
                 Match match = Datacontext.Matches.Find(selected);
-                if (match != null && match.Winner == null)
+                if (match.Winner == null)
                 {
                     AddBet(match);
                 }
@@ -329,6 +332,59 @@ namespace Pra_C3_Native
             Helpers.Pause();
         }
 
+        public void GetAllScores()
+        {
+            GetAllMatches();
+            List<Bet> bets = Datacontext.Bets.ToList();
+            foreach (Bet bet in bets) 
+            {
+                Match match = bet.GetMatch();
+                User user = bet.GetUser();
+                int teamchoice = 0;
+                //gets the team of choce
+                if (match.Team1 == bet.Winner)
+                {
+                    teamchoice = 1;
+                }
+                else
+                {
+                    teamchoice = 2;
+                }
+                // checks wat team winns
+                if (match.Team1_Score > match.Team2_Score)
+                {
+                    if(teamchoice == 1)
+                    {
+                        bet.PayedOut = true;
+                        bet.Won = true;
+                        user.Credits += bet.amount * 2;
+                    }
+                    else
+                    {
+                        bet.PayedOut= false;
+                        bet.Won = false;
+                    }
+
+                    Datacontext.SaveChanges();
+                }
+                else if(match.Team1_Score < match.Team2_Score)
+                {
+                    if (teamchoice == 2)
+                    {
+                        bet.PayedOut = true;
+                        bet.Won = true;
+                        user.Credits += bet.amount * 2;
+                    }
+                    else
+                    {
+                        bet.PayedOut = false;
+                        bet.Won = false;
+                    }
+
+                    Datacontext.SaveChanges();
+                }
+            }
+        }
         public void RegisterAccount()
         {
             bool found = false;
@@ -419,7 +475,8 @@ namespace Pra_C3_Native
                 if (session.Admin == true)
                 {
                     Console.WriteLine("3. haal wedstrijden op");
-                    Console.WriteLine("4. log out");
+                    Console.WriteLine("4. haal de score op");
+                    Console.WriteLine("5. log out");
 
                 }
                 else
