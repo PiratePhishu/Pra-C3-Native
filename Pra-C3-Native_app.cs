@@ -282,11 +282,8 @@ namespace Pra_C3_Native
                 {
                     AddBet(match);
                 }
-                
+            
             }
-
-
-
         }
 
         public void GetAllMatches()
@@ -335,6 +332,7 @@ namespace Pra_C3_Native
         public void GetAllScores()
         {
             GetAllMatches();
+            UpdateAllScore();
             List<Bet> bets = Datacontext.Bets.ToList();
             foreach (Bet bet in bets) 
             {
@@ -383,6 +381,27 @@ namespace Pra_C3_Native
                 Datacontext.Users.Update(user);
                 Datacontext.SaveChanges();
             }
+        }
+
+        public void UpdateAllScore()
+        {
+            List<Match> db_Matches = Datacontext.Matches.ToList();
+            List<MatchApi> matches = reader.GetMatch();
+
+            foreach (MatchApi match in matches)
+            {
+                foreach (Match db_match in db_Matches)
+                {
+                    if (db_match.Match_id == match.id)
+                    {
+                        db_match.Team1_Score = match.team1_score;
+                        db_match.Team2_Score = match.team2_score;
+                        Datacontext.Matches.Update(db_match);
+                    }
+                }
+
+            }
+            Datacontext.SaveChanges();
         }
         public void RegisterAccount()
         {
