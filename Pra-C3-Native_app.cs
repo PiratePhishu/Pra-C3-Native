@@ -221,7 +221,7 @@ namespace Pra_C3_Native
                 return;
             }
             Console.WriteLine($"id: {match.id} | {match.Team1} vs {match.Team2}\n");
-            Console.WriteLine($"1.{match.Team1}\n2.{match.Team2}");
+            Console.WriteLine($"1.{match.Team1}\n2.{match.Team2}\n3.gelijk");
             Console.Write("vul team nummer in:");
             string choice = Console.ReadLine();
             switch (choice)
@@ -231,6 +231,9 @@ namespace Pra_C3_Native
                     break;
                 case "2":
                     bet.Winner = match.Team2;
+                    break;
+                case "3":
+                    bet.Winner = "none";
                     break;
                 default:
                     Console.WriteLine("Team niet gevonden");
@@ -338,45 +341,58 @@ namespace Pra_C3_Native
             {
                 Match match = bet.GetMatch();
                 User user = bet.GetUser();
-                int teamchoice = 0;
+                if (match.Winner != null && bet.PayedOut == false) 
+                {
+                    if (match.Winner == bet.Winner)
+                    {
+                        bet.PayedOut = true;
+                        bet.Won = true;
+                        user.Credits += bet.amount * 2;
+                    }
+                    else
+                    {
+                        bet.PayedOut = true;
+                        bet.Won = false;
+                    }
+                }
                 //gets the team of choce
-                if (match.Team1 == bet.Winner)
-                {
-                    teamchoice = 1;
-                }
-                else
-                {
-                    teamchoice = 2;
-                }
-                // checks wat team winns
-                if (match.Team1_Score > match.Team2_Score)
-                {
-                    if(teamchoice == 1)
-                    {
-                        bet.PayedOut = true;
-                        bet.Won = true;
-                        user.Credits += bet.amount * 2;
-                    }
-                    else
-                    {
-                        bet.PayedOut= false;
-                        bet.Won = false;
-                    }
-                }
-                else if(match.Team1_Score < match.Team2_Score)
-                {
-                    if (teamchoice == 2)
-                    {
-                        bet.PayedOut = true;
-                        bet.Won = true;
-                        user.Credits += bet.amount * 2;
-                    }
-                    else
-                    {
-                        bet.PayedOut = false;
-                        bet.Won = false;
-                    }
-                }
+                //if (match.Team1 == bet.Winner)
+                //{
+                //    teamchoice = 1;
+                //}
+                //else
+                //{
+                //    teamchoice = 2;
+                //}
+                //// checks wat team winns
+                //if (match.Team1_Score > match.Team2_Score)
+                //{
+                //    if(teamchoice == 1)
+                //    {
+                //        bet.PayedOut = true;
+                //        bet.Won = true;
+                //        user.Credits += bet.amount * 2;
+                //    }
+                //    else
+                //    {
+                //        bet.PayedOut= true;
+                //        bet.Won = false;
+                //    }
+                //}
+                //else if(match.Team1_Score < match.Team2_Score)
+                //{
+                //    if (teamchoice == 2)
+                //    {
+                //        bet.PayedOut = true;
+                //        bet.Won = true;
+                //        user.Credits += bet.amount * 2;
+                //    }
+                //    else
+                //    {
+                //        bet.PayedOut = true;
+                //        bet.Won = false;
+                //    }
+                //}
                 Datacontext.Bets.Update(bet);
                 Datacontext.Users.Update(user);
                 Datacontext.SaveChanges();
@@ -396,7 +412,22 @@ namespace Pra_C3_Native
                     {
                         db_match.Team1_Score = match.team1_score;
                         db_match.Team2_Score = match.team2_score;
-                        Datacontext.Matches.Update(db_match);
+                        if(db_match.Team1_Score != null && db_match.Team2_Score != null)
+                        {
+                            if (db_match.Team1_Score > db_match.Team2_Score)
+                            {
+                                db_match.Winner = db_match.Team1;
+                            }
+                            else if (db_match.Team1_Score < db_match.Team2_Score)
+                            {
+                                db_match.Winner = db_match.Team2;
+                            }
+                            else if (db_match.Team1_Score == db_match.Team2_Score)
+                            {
+                                db_match.Winner = "none";
+                            }
+                            Datacontext.Matches.Update(db_match);
+                        }   
                     }
                 }
 

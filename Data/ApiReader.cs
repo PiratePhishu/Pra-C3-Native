@@ -12,7 +12,7 @@ namespace Pra_C3_Native.Data
     internal class ApiReader
     {
         private readonly HttpClient httpClient;
-        private const string ApiBaseUrl = "http://c3-pra.test/MatchesApi";
+        private const string ApiBaseUrl = "http://127.0.0.1:8000/MatchesApi";
 
         public ApiReader()
         {
