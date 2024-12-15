@@ -221,7 +221,7 @@ namespace Pra_C3_Native
                 return;
             }
             Console.WriteLine($"id: {match.id} | {match.Team1} vs {match.Team2}\n");
-            Console.WriteLine($"1.{match.Team1}\n2.{match.Team2}\n3.gelijk");
+            Console.WriteLine($"1.{match.Team1}\n2.{match.Team2}\n3.gekijkspel");
             Console.Write("vul team nummer in:");
             string choice = Console.ReadLine();
             switch (choice)
@@ -355,44 +355,6 @@ namespace Pra_C3_Native
                         bet.Won = false;
                     }
                 }
-                //gets the team of choce
-                //if (match.Team1 == bet.Winner)
-                //{
-                //    teamchoice = 1;
-                //}
-                //else
-                //{
-                //    teamchoice = 2;
-                //}
-                //// checks wat team winns
-                //if (match.Team1_Score > match.Team2_Score)
-                //{
-                //    if(teamchoice == 1)
-                //    {
-                //        bet.PayedOut = true;
-                //        bet.Won = true;
-                //        user.Credits += bet.amount * 2;
-                //    }
-                //    else
-                //    {
-                //        bet.PayedOut= true;
-                //        bet.Won = false;
-                //    }
-                //}
-                //else if(match.Team1_Score < match.Team2_Score)
-                //{
-                //    if (teamchoice == 2)
-                //    {
-                //        bet.PayedOut = true;
-                //        bet.Won = true;
-                //        user.Credits += bet.amount * 2;
-                //    }
-                //    else
-                //    {
-                //        bet.PayedOut = true;
-                //        bet.Won = false;
-                //    }
-                //}
                 Datacontext.Bets.Update(bet);
                 Datacontext.Users.Update(user);
                 Datacontext.SaveChanges();
