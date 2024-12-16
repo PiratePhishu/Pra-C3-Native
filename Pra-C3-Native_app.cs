@@ -292,6 +292,7 @@ namespace Pra_C3_Native
         public void GetAllMatches()
         {
             Console.Clear();
+            UpdateAllScore();
             List<Match> db_Matches = Datacontext.Matches.ToList(); 
             List<MatchApi> matches = reader.GetMatch();
             Console.WriteLine("Matches added:");
@@ -334,8 +335,6 @@ namespace Pra_C3_Native
 
         public void GetAllScores()
         {
-            GetAllMatches();
-            UpdateAllScore();
             List<Bet> bets = Datacontext.Bets.ToList();
             foreach (Bet bet in bets) 
             {
@@ -365,6 +364,7 @@ namespace Pra_C3_Native
         {
             List<Match> db_Matches = Datacontext.Matches.ToList();
             List<MatchApi> matches = reader.GetMatch();
+            Console.WriteLine("updated matches:");
 
             foreach (MatchApi match in matches)
             {
@@ -376,24 +376,28 @@ namespace Pra_C3_Native
                         db_match.Team2_Score = match.team2_score;
                         if(db_match.Team1_Score != null && db_match.Team2_Score != null)
                         {
-                            if (db_match.Team1_Score > db_match.Team2_Score)
+                            if (db_match.Team1_Score > db_match.Team2_Score && db_match.Winner == null)
                             {
                                 db_match.Winner = db_match.Team1;
+                                Console.WriteLine($"id:{db_match.id}|{db_match.Team1} vs {db_match.Team2}|Score Team 1: ({db_match.Team1_Score}) Score Team 2: ({db_match.Team2_Score})|winnaar: {db_match.Winner}");
                             }
-                            else if (db_match.Team1_Score < db_match.Team2_Score)
+                            else if (db_match.Team1_Score < db_match.Team2_Score && db_match.Winner == null)
                             {
                                 db_match.Winner = db_match.Team2;
+                                Console.WriteLine($"id:{db_match.id}|{db_match.Team1} vs {db_match.Team2}|Score Team 1: ({db_match.Team1_Score}) Score Team 2: ({db_match.Team2_Score})|winnaar: {db_match.Winner}");
                             }
-                            else if (db_match.Team1_Score == db_match.Team2_Score)
+                            else if (db_match.Team1_Score == db_match.Team2_Score && db_match.Winner == null)
                             {
                                 db_match.Winner = "none";
+                                Console.WriteLine($"id:{db_match.id}|{db_match.Team1} vs {db_match.Team2}|Score Team 1: ({db_match.Team1_Score}) Score Team 2: ({db_match.Team2_Score})|winnaar: {db_match.Winner}");
                             }
                             Datacontext.Matches.Update(db_match);
                         }   
                     }
                 }
-
             }
+            Helpers.Pause();
+            Console.WriteLine();
             Datacontext.SaveChanges();
         }
         public void RegisterAccount()
@@ -486,7 +490,7 @@ namespace Pra_C3_Native
                 if (session.Admin == true)
                 {
                     Console.WriteLine("3. haal wedstrijden op");
-                    Console.WriteLine("4. haal de score op");
+                    Console.WriteLine("4. weddeschappen uit betalen");
                     Console.WriteLine("5. log out");
 
                 }
